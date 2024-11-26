@@ -1,147 +1,133 @@
-# Chrome Extension generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-chrome-extension.svg?branch=master)](http://travis-ci.org/yeoman/generator-chrome-extension)
+# Chrome 扩展生成器
 
-Maintainer: [Jimmy Moon](https://github.com/ragingwind)
+> 该生成器提供了开发 Chrome 扩展所需的所有基础结构。您可以选择浏览器 UI 类型（浏览器操作、页面操作、地址栏输入）并根据需要配置权限。
 
-> Chrome Extension generator that creates everything you need to get started with extension development. You can choose Browser UI(Browser,Page Action, Omnibox) type and select into permissions what you need.
+## 快速开始
 
-## Getting Started
+1. **安装必要的全局工具**：
+
+   ```sh
+   npm install --global yo gulp-cli bower
+   ```
+
+2. **安装 Chrome 扩展生成器**：
+
+   ```sh
+   npm install -g generator-chrome-extension
+   ```
+
+3. **创建并进入新目录**：
+
+   ```sh
+   mkdir my-new-chrome-extension && cd $_
+   ```
+
+4. **生成新项目**：
+
+   ```sh
+   yo chrome-extension
+   ```
+
+5. **编译 ES2015 代码**：
+
+   ```sh
+   gulp babel
+   ```
+
+6. **启用实时监视以自动编译**：
+
+   ```sh
+   gulp watch
+   ```
+
+7. **构建生产版本的扩展**：
+
+   ```sh
+   gulp build
+   ```
+
+## 测试 Chrome 扩展
+
+在 Chrome 浏览器中，打开 `chrome://extensions`，启用开发者模式，然后加载未打包的扩展进行测试。
+
+## 可用的生成器
+
+- **chrome-extension**：设置一个新的 Chrome 扩展项目，生成所有必要的基础文件。
+
+   ```bash
+   yo chrome-extension
+   ```
+
+## Gulp 任务
+
+### Babel 转码
+
+生成器支持通过 Babel 转换 ES2015 语法。开发过程中，修改代码后需要运行以下命令进行转码：
 
 ```sh
-# Please make sure that `yo`, `gulp` and `bower` was installed on your system using this command:
-npm install --global yo gulp-cli bower
-
-# Install the generator:
-npm install -g generator-chrome-extension
-
-# Make a new directory, and `cd` get into it:
-mkdir my-new-chrome-extension && cd $_
-
-# Generate a new project
-yo chrome-extension
-
-# Transform updated source written by ES2015 (default option)
 gulp babel
+```
 
-# or Using watch to update source continuously
+### 实时监视（Watch）
+
+实时监视任务可以自动编译源代码并重新加载扩展。
+
+```bash
 gulp watch
+```
 
-# Make a production version extension
+**注意**：启动 `gulp watch` 后，需要重新加载扩展以激活实时重载功能。对于内容脚本，需要刷新其应用的页面。
+
+### 构建和打包
+
+构建应用程序，生成的生产版本将位于 `dist` 目录中：
+
+```bash
 gulp build
 ```
 
-## Test Chrome Extension
-
-To test, go to: chrome://extensions, enable Developer mode and load app as an unpacked extension.
-
-Need more information about Chrome Extension? Please visit [Google Chrome Extension Development](http://developer.chrome.com/extensions/devguide.html)
-
-## Generators
-
-Available generators:
-
-* [chrome-extension](#app) (aka [chrome-extension:app](#app))
-
-### App
-
-Sets up a new Chrome Extension, generating all the boilerplate you need to get started.
-
-```bash
-yo chrome-extension
-```
-
-## gulp tasks
-
-### Babel
-
-The generator supports ES 2015 syntax through babel transforming. You may have a source files in `script.babel` if your project has been generated without `--no-babel` options. While developing, When those of source has been changed, `gulp babel` should be run before test and run a extension on Chrome.
-
-```sh
-gulp babel
-```
-
-If you would like to have a continuous transforming by babel you can use `watch` task
-
-### Watch
-
-Watch task helps you reduce your efforts during development extensions. If the task detects your changes of source files, re-compile your sources automatically or Livereload([chromereload.js](https://github.com/yeoman/generator-chrome-extension/blob/master/app/templates/scripts/chromereload.js)) reloads your extension. If you would like to know more about Live-reload and preview of Yeoman? Please see [Getting started with Yeoman and generator-webapp](http://youtu.be/zBt2g9ekiug?t=3m51s) for your understanding.
-
-```bash
-gulp watch
-```
-
-You need to load/reload extension after starting `gulp watch` for Live-reload to work. 
-
-For content scripts you need to refresh pages where it is used.
-
-### Build and Package
-
-It will build your app as a result you can have a distribution version of the app in `dist`. Run this command to build your Chrome Extension app.
-
-```bash
-gulp build
-```
-
-You can also distribute your project with compressed file using the Chrome Developer Dashboard at Chrome Web Store. This command will compress your app built by `gulp build` command.
+要将项目压缩为 `.zip` 文件以便在 Chrome Web Store 上发布：
 
 ```bash
 gulp package
 ```
 
-## Options
+## 选项
 
-* `--no-babel`
+- `--no-babel`：如果不希望使用 [Babel](https://babeljs.io/) ES2015 转码器。
 
-  If you wouldn't use [Babel](https://babeljs.io/) ES2015 transpiler.
+- `--skip-install`：跳过在脚手架完成后自动执行 `bower` 和 `npm`。
 
-* `--skip-install`
+- `--test-framework=[framework]`：默认为 `mocha`，可切换为其他支持的测试框架，如 `jasmine`。
 
-  Skips the automatic execution of `bower` and `npm` after
-  scaffolding has finished.
+- `--sass`：添加对 [Sass](http://sass-lang.com/libsass) 的支持。
 
-* `--test-framework=[framework]`
+- `--all-permissions`：显示 Chrome 扩展的所有权限。
 
-  Defaults to `mocha`. Can be switched for
-  another supported testing framework like `jasmine`.
+## ES2015 和 Babel
 
-* `--sass`
+默认情况下，生成器支持 ES2015 语法。由于 Chrome 尚未完全支持所有 ES2015 功能，需要使用 `gulp babel` 进行转码。源代码位于 `scripts.babel` 目录，转码后的代码位于 `scripts` 目录。
 
-  Add support for [Sass](http://sass-lang.com/libsass).
-
-* `--all-permissions`
-
-  All of permissions of chrome extension will be shown.
-
-### ES2015 and babel
-
-ES2015 is the `default option` in the generator that means you can use es2015 now for developing the Chrome extensions. However, at this moment, you need to execute `babel` task of gulp to compile to test and run your extension on Chrome, because [ES2015 is not full functionality on Chrome as yet](http://kangax.github.io/compat-table/es6/).
-
-The sources written by es2015 is located at `scripts.babel` and runnable sources will be at `script` after compiling by `gulp babel`. May you don't want to use babel and ES2015 use `--no-babel` option when scaffolding a new project.
+如果不想使用 Babel 和 ES2015，可在初始化项目时添加 `--no-babel` 选项：
 
 ```sh
 yo chrome-extension --no-babel
 ```
 
-### Sass
+## Sass 支持
 
-This generator supports `sass` through `--sass` options and generate `scss` boilerplate files at `styles.scss` that those of `scss` files will be compiled to `styles` via `gulp style` task. To do this, `libsass` is featured in the generator. Please see [this](https://github.com/yeoman/generator-gulp-webapp#libsass) for further information.
+通过 `--sass` 选项，生成器支持 Sass，并在 `styles.scss` 中生成样板文件。可使用以下命令编译为 CSS：
 
 ```sh
 yo chrome-extension --sass
 ```
 
-### All of Permissions for Chrome Extension
+## 全部权限
 
-Need to add more permissions for chrome extension? You can get all list of permissions using `--all-permissions` option when scaffolding a new project.
+需要为 Chrome 扩展添加更多权限？使用 `--all-permissions` 选项查看完整权限列表：
 
 ```sh
 yo chrome-extension --all-permissions
 ```
 
-## Contribute
-
-See the [contributing docs](https://github.com/yeoman/yeoman/blob/master/contributing.md)
-
-## License
-
-[BSD license](http://opensource.org/licenses/bsd-license.php)
-
+**注意**：请根据最新的 [generator-chrome-extension](https://github.com/yeoman/generator-chrome-extension) 文档确认上述信息的准确性。 
